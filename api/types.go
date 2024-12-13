@@ -1,5 +1,7 @@
 package api
 
+import "fmt"
+
 type PortMapping struct {
 	HostIp   string `json:"HostIp"`
 	HostPort string `json:"HostPort"`
@@ -42,7 +44,7 @@ type Instance struct {
 	GPURam            int      `json:"gpu_ram"`
 	GPUDisplayActive  bool     `json:"gpu_display_active"`
 	GPUMemBW          float64  `json:"gpu_mem_bw"`
-	BWNVLink          int      `json:"bw_nvlink"`
+	BWNVLink          float64  `json:"bw_nvlink"`
 	DirectPortCount   int      `json:"direct_port_count"`
 	GPULanes          int      `json:"gpu_lanes"`
 	PCIeBW            float64  `json:"pcie_bw"`
@@ -108,11 +110,12 @@ type Offer struct {
 	Rentable          bool     `json:"rentable"`
 	ComputeCap        int      `json:"compute_cap"`
 	DriverVersion     string   `json:"driver_version"`
-	CudaMaxGood       int      `json:"cuda_max_good"`
+	CudaMaxGood       float64  `json:"cuda_max_good"`
 	MachineID         int      `json:"machine_id"`
-	HostingType       *string  `json:"hosting_type"`
+	HostingType       *float64 `json:"hosting_type"`
 	PublicIPAddr      string   `json:"public_ipaddr"`
 	Geolocation       string   `json:"geolocation"`
+	Geocode           *int64   `json:"geolocode"`
 	FlopsPerDPHTotal  float64  `json:"flops_per_dphtotal"`
 	DLPerfPerDPHTotal float64  `json:"dlperf_per_dphtotal"`
 	Reliability2      float64  `json:"reliability2"`
@@ -129,17 +132,17 @@ type Offer struct {
 	GPURam            int      `json:"gpu_ram"`
 	GPUDisplayActive  bool     `json:"gpu_display_active"`
 	GPUMemBw          float64  `json:"gpu_mem_bw"`
-	BwNVLink          int      `json:"bw_nvlink"`
+	BwNVLink          float64  `json:"bw_nvlink"`
 	DirectPortCount   int      `json:"direct_port_count"`
 	GPULanes          int      `json:"gpu_lanes"`
 	PCIeBw            float64  `json:"pcie_bw"`
-	PCIGen            int      `json:"pci_gen"`
+	PCIGen            float64  `json:"pci_gen"`
 	DLPerf            float64  `json:"dlperf"`
 	CPUName           string   `json:"cpu_name"`
 	MoboName          string   `json:"mobo_name"`
 	CPURam            int      `json:"cpu_ram"`
-	CPUCores          int      `json:"cpu_cores"`
-	CPUCoresEffective int      `json:"cpu_cores_effective"`
+	CPUCores          float64  `json:"cpu_cores"`
+	CPUCoresEffective float64  `json:"cpu_cores_effective"`
 	GPUFrac           float64  `json:"gpu_frac"`
 	HasAVX            int      `json:"has_avx"`
 	DiskSpace         float64  `json:"disk_space"`
@@ -159,4 +162,12 @@ type Offer struct {
 	Rented            bool     `json:"rented"`
 	BundledResults    int      `json:"bundled_results"`
 	PendingCount      int      `json:"pending_count"`
+}
+
+func (o *Offer) String() string {
+	geocode := 0
+	if o.Geocode != nil {
+		geocode = int(*o.Geocode)
+	}
+	return fmt.Sprintf("[%s] %s %s %d", o.GPUName, o.PublicIPAddr, o.Geolocation, geocode)
 }
