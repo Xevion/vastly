@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -24,20 +23,4 @@ func main() {
 
 	// Create client
 	client := api.NewClient(apiKey)
-
-	// Get instances
-	resp, err := client.GetInstances()
-	if err != nil {
-		log.Fatalf("Error getting instances: %v", err)
-	}
-
-	if len(resp.Instances) == 0 {
-		fmt.Println("No instances found")
-		return
-	}
-
-	// Print instances
-	for _, instance := range resp.Instances {
-		fmt.Printf("Instance %d: %+v\n", instance.ID, instance)
-	}
 }
