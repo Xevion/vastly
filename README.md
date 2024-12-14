@@ -1,8 +1,6 @@
-# quickvast
+# vastly
 
-CLI tools for managing Vast.ai instances.
-
-What I want from this tool:
+## User Stories
 
 - [ ] Quickly choose machine types from a refined, customized list of options.
   - This would not just be a filter, it would be a customized, weighted scoring system allowing me to quickly choose the best machine for my needs.
@@ -22,7 +20,6 @@ What I want from this tool:
   - My concern is that I might leave an instance running for too long and rack up a huge bill.
   - I would like each instance to have a time limit for my usage, both a soft and hard limit.
   - The soft limit will send me a message on Discord, and the hard limit will destroy the instance after another message.
-  -
 
 ## About
 
