@@ -31,7 +31,7 @@ func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
 
-func old() {
+func (a *App) Search() []api.ScoredOffer {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
 
@@ -61,11 +61,5 @@ func old() {
 		sugar.Fatal(err)
 	}
 
-	// Print offers
-	sugar.Infof("Offers: %d", len(resp.Offers))
-	for _, offer := range resp.Offers {
-		sugar.Info(offer.String())
-	}
-
-	sugar.Info("Done")
+	return api.ScoreOffers(resp.Offers)
 }

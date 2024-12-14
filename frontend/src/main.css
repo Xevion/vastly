@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 html {
-  @apply bg-zinc-800 p-0 m-0 h-screen w-screen text-zinc-200;
+  @apply bg-zinc-800 p-0 m-0 h-screen w-screen text-zinc-200 overflow-x-hidden;
 }

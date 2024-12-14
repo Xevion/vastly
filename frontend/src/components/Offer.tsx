@@ -1,7 +1,9 @@
-export default function Offer() {
-  return (
-    <div className="p-4">
-      <h1>Offer</h1>
-    </div>
-  );
+import { api } from "@wails/go/models";
+
+export default function Offer({
+  offer: scoredOffer,
+}: {
+  offer: api.ScoredOffer;
+}) {
+  return <div className="p-4">{scoredOffer.Score}</div>;
 }

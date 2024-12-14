@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": rootPath + "src",
+      "@components": rootPath + "src/components",
       "@wails": rootPath + "wailsjs",
     },
   },
