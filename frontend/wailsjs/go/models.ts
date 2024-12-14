@@ -1,5 +1,25 @@
 export namespace api {
 	
+	export class ExtendedOfferDetails {
+	    gpuCostPerHour: number;
+	    diskHour: number;
+	    totalHour: number;
+	    discountTotalHour: number;
+	    discountPerHour: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ExtendedOfferDetails(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.gpuCostPerHour = source["gpuCostPerHour"];
+	        this.diskHour = source["diskHour"];
+	        this.totalHour = source["totalHour"];
+	        this.discountTotalHour = source["discountTotalHour"];
+	        this.discountPerHour = source["discountPerHour"];
+	    }
+	}
 	export class Offer {
 	    is_bid: boolean;
 	    inet_up_billed?: number;
@@ -29,6 +49,7 @@ export namespace api {
 	    dph_base: number;
 	    dph_total: number;
 	    gpu_name: string;
+	    gpu_arch: string;
 	    gpu_ram: number;
 	    gpu_display_active: boolean;
 	    gpu_mem_bw: number;
@@ -62,6 +83,8 @@ export namespace api {
 	    rented: boolean;
 	    bundled_results: number;
 	    pending_count: number;
+	    search: ExtendedOfferDetails;
+	    instance: ExtendedOfferDetails;
 	
 	    static createFrom(source: any = {}) {
 	        return new Offer(source);
@@ -97,6 +120,7 @@ export namespace api {
 	        this.dph_base = source["dph_base"];
 	        this.dph_total = source["dph_total"];
 	        this.gpu_name = source["gpu_name"];
+	        this.gpu_arch = source["gpu_arch"];
 	        this.gpu_ram = source["gpu_ram"];
 	        this.gpu_display_active = source["gpu_display_active"];
 	        this.gpu_mem_bw = source["gpu_mem_bw"];
@@ -130,11 +154,50 @@ export namespace api {
 	        this.rented = source["rented"];
 	        this.bundled_results = source["bundled_results"];
 	        this.pending_count = source["pending_count"];
+	        this.search = this.convertValues(source["search"], ExtendedOfferDetails);
+	        this.instance = this.convertValues(source["instance"], ExtendedOfferDetails);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ScoreReason {
+	    Reason: string;
+	    Offset: number;
+	    Value: any;
+	    IsMultiplier: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ScoreReason(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.Reason = source["Reason"];
+	        this.Offset = source["Offset"];
+	        this.Value = source["Value"];
+	        this.IsMultiplier = source["IsMultiplier"];
 	    }
 	}
 	export class ScoredOffer {
 	    Offer: Offer;
 	    Score: number;
+	    Reasons: ScoreReason[];
 	
 	    static createFrom(source: any = {}) {
 	        return new ScoredOffer(source);
@@ -144,6 +207,7 @@ export namespace api {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.Offer = this.convertValues(source["Offer"], Offer);
 	        this.Score = source["Score"];
+	        this.Reasons = this.convertValues(source["Reasons"], ScoreReason);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

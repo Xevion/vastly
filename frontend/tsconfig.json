@@ -18,7 +18,8 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/components/*"],
-      "@wails/*": ["./wailsjs/*"]
+      "@wails/*": ["./wailsjs/*"],
+      "@src/*": ["src/*"]
     }
   },
   "include": ["src"],

@@ -5,3 +5,37 @@
 html {
   @apply bg-zinc-800 p-0 m-0 h-screen w-screen text-zinc-200 overflow-x-hidden;
 }
+
+@layer base {
+  * {
+    /* @apply border-border; */
+  }
+  body {
+    /* @apply bg-background text-foreground; */
+  }
+
+  ul,
+  ol {
+    list-style: revert;
+  }
+  /* NEW CODE */
+  /* width */
+  ::-webkit-scrollbar {
+    @apply w-2 rounded-lg;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    @apply bg-zinc-700 rounded-lg;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    @apply bg-zinc-500 rounded-xl;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-zinc-400 rounded-lg;
+  }
+}

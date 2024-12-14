@@ -9,6 +9,7 @@ function App() {
   async function invoke() {
     const offers = await Search();
     console.log({ offer: offers[0] });
+    offers.sort((a, b) => b.Score - a.Score);
     setState(offers);
   }
 
@@ -18,10 +19,12 @@ function App() {
 
   return (
     <div id="App">
-      <div className="p-4" onClick={invoke}>
-        {state?.map((offer) => (
-          <Offer offer={offer} />
-        ))}
+      <div className="p-4">
+        <div className="space-y-3 flex flex-col justify-items-center">
+          {state?.map((offer) => (
+            <Offer offer={offer} />
+          ))}
+        </div>
       </div>
     </div>
   );

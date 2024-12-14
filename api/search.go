@@ -6,6 +6,8 @@ import (
 )
 
 type AdvancedSearch struct {
+	Limit             int                `json:"limit,omitempty"`
+	AllocatedStorage  float64            `json:"allocated_storage,omitempty"`
 	Verified          *bool              `json:"verified,omitempty"`
 	ComputeCap        *ComparableInteger `json:"compute_cap,omitempty"`
 	DiskSpace         *ComparableInteger `json:"disk_space,omitempty"`
@@ -50,6 +52,7 @@ type AdvancedSearch struct {
 func NewSearch() *AdvancedSearch {
 	return &AdvancedSearch{
 		Rented: Pointer(false),
+		Limit:  500,
 	}
 }
 

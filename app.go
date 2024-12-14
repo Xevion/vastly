@@ -52,6 +52,9 @@ func (a *App) Search() []api.ScoredOffer {
 
 	// Create search
 	search := api.NewSearch()
+	search.AllocatedStorage = 39.94657756485159
+	search.Limit = 1000
+	// search.Rentable = api.Pointer(true)
 	// search.CPUCores = api.Ge(8)
 
 	// Perform search

@@ -11,6 +11,7 @@ export default defineConfig({
     alias: {
       "@components": rootPath + "src/components",
       "@wails": rootPath + "wailsjs",
+      "@src": rootPath + "src",
     },
   },
 });
