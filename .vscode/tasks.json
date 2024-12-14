@@ -33,7 +33,7 @@
         "-gcflags",
         "all=-N -l",
         "-o",
-        "build/bin/vastop.exe"
+        "build/bin/vastly.exe"
       ]
     },
     {
@@ -68,7 +68,7 @@
         "-gcflags",
         "all=-N -l",
         "-o",
-        "build/bin/vastop.exe"
+        "build/bin/vastly.exe"
       ]
     },
     {
@@ -103,9 +103,8 @@
         "-gcflags",
         "all=-N -l",
         "-o",
-        "build/bin/vastop.exe"
+        "build/bin/vastly.exe"
       ]
     }
   ]
 }
-  

@@ -2,29 +2,29 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Wails: Production vastop",
+      "name": "Wails: Production vastly",
       "type": "go",
       "request": "launch",
       "mode": "exec",
-      "program": "${workspaceFolder}/build/bin/vastop.exe",
+      "program": "${workspaceFolder}/build/bin/vastly.exe",
       "preLaunchTask": "build",
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "Wails: Debug vastop",
+      "name": "Wails: Debug vastly",
       "type": "go",
       "request": "launch",
       "mode": "exec",
-      "program": "${workspaceFolder}/build/bin/vastop.exe",
+      "program": "${workspaceFolder}/build/bin/vastly.exe",
       "preLaunchTask": "build debug",
       "cwd": "${workspaceFolder}"
     },
     {
-      "name": "Wails: Dev vastop",
+      "name": "Wails: Dev vastly",
       "type": "go",
       "request": "launch",
       "mode": "exec",
-      "program": "${workspaceFolder}/build/bin/vastop.exe",
+      "program": "${workspaceFolder}/build/bin/vastly.exe",
       "preLaunchTask": "build dev",
       "cwd": "${workspaceFolder}"
     }

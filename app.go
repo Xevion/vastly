@@ -7,7 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
-	"xevion.dev/quickvast/api"
+	"xevion.dev/vastly/api"
 )
 
 // App struct
