@@ -1,10 +1,20 @@
-import { useState } from "react";
-import logo from "./assets/images/logo-universal.png";
-import "./App.css";
-import { Greet } from "../wailsjs/go/main/App";
+import { Greet } from "@wails/go/main/App";
+import { useEffect, useState } from "react";
 
 function App() {
-  return <div id="App"></div>;
+  const [state, setState] = useState<string>("");
+
+  useEffect(() => {
+    Greet("World").then((result) => {
+      setState(result);
+    });
+  });
+
+  return (
+    <div id="App">
+      <div className="p-4">{state}</div>
+    </div>
+  );
 }
 
 export default App;
