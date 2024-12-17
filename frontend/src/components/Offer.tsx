@@ -36,6 +36,10 @@ export default function Offer({
           <span className="text-xs select-none">mem</span>{" "}
           {mb_to_gb(offer.cpu_ram)}/{mb_to_gb(offer.cpu_ram / offer.gpu_frac)}GB
         </span>
+        <span className="pl-3 text-sm">
+          <span className="text-xs select-none">dlperf</span>{" "}
+          {offer.dlperf.toFixed(0)}
+        </span>
       </div>
       <div className="select-none [>button]:select-auto [>button]:text-blue-500 w-full left-1 text-xs space-x-1">
         <button onClick={() => copy(offer.machine_id.toString())}>

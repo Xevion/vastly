@@ -1,5 +1,23 @@
 # vastly
 
+## Feature Wishlist
+
+- [ ] Configurable Scoring System
+  - Easily Change Score & Weighting
+- [ ] Cached Latency Testing
+  - Keyed against the source machine's outgoing IP, and destination public IP
+
+## Configurable Scoring
+
+Scoring needs an easy, concise format that allows rapid modification and easy tuning.
+
+- Easily editable format that can be stored, iterated, and given simple queries.
+- Can be stored in a file, or copied to clipboard.
+  - This would allow for easy modification & duplication for new filters.
+- Can connect score judgements to the value in question, providing context & score ranges.
+  - For example, three colors for three score ranges, < 30 being green, >= 90 being red, and other being yellow.
+  - Or, a gradient range from green to red to yellow, with a score range of 0-100.
+
 ## User Stories
 
 - [ ] Quickly choose machine types from a refined, customized list of options.
@@ -15,7 +33,6 @@
   - Being able to quickly retrieve necessary connection information, open the browser for tooling, and copy authentication details.
   - Being able to quickly SSH into the machine.
 - [ ] Quickly destroy instances.
-  - Being able to destroy instances quickly.
 - [ ] Long term monitoring for pricing
   - My concern is that I might leave an instance running for too long and rack up a huge bill.
   - I would like each instance to have a time limit for my usage, both a soft and hard limit.
