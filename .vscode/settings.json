@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["vastly", "vmem"],
+  "cSpell.words": ["dlperf", "vastly", "vmem"],
   "cSpell.ignorePaths": [
     "package-lock.json",
     "node_modules",
