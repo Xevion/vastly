@@ -4,7 +4,7 @@ import { cn } from "@src/utils";
 import { Tooltip } from "react-tooltip";
 
 export default function Offer({
-  offer: { Offer: offer, Score: score, Reasons: reasons },
+  offer: { Offer: offer, Score: score, Reasons: reasons, Latency: latency },
 }: {
   offer: api.ScoredOffer;
 }) {
@@ -25,9 +25,13 @@ export default function Offer({
         <span className="text-4xl font-bold pr-2">
           {score >= 10 ? Math.round(score) : score.toFixed(1)}
         </span>
-        <span className="relative text-xl top-2.5">
+        <span className="relative text-xl top-2.5 pr-2">
           {offer.num_gpus}x {offer.gpu_name}{" "}
           <span className="text-sm">{mb_to_gb(offer.gpu_ram)} GB</span>
+        </span>
+        <span className="relative top-3 text-base">
+          <span>{latency ?? "?"}</span>
+          <span className="text-xs select-none">ms</span>
         </span>
       </div>
       <div>

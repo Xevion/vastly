@@ -18,6 +18,7 @@ type ScoredOffer struct {
 	Offer   Offer
 	Score   float64
 	Reasons []ScoreReason
+	Latency *int32
 }
 
 var (

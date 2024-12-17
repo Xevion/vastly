@@ -198,6 +198,7 @@ export namespace api {
 	    Offer: Offer;
 	    Score: number;
 	    Reasons: ScoreReason[];
+	    Latency?: number;
 	
 	    static createFrom(source: any = {}) {
 	        return new ScoredOffer(source);
@@ -208,6 +209,7 @@ export namespace api {
 	        this.Offer = this.convertValues(source["Offer"], Offer);
 	        this.Score = source["Score"];
 	        this.Reasons = this.convertValues(source["Reasons"], ScoreReason);
+	        this.Latency = source["Latency"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

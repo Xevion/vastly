@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -12,56 +11,60 @@ import (
 
 // App struct
 type App struct {
-	ctx context.Context
+	ctx     context.Context
+	client  *api.Client
+	logger  *zap.SugaredLogger
+	latency *api.LatencyQueue
 }
 
 // NewApp creates a new App application struct
 func NewApp() *App {
-	return &App{}
+	logger, _ := zap.NewDevelopment()
+	return &App{
+		logger:  logger.Sugar(),
+		latency: api.NewLatencyQueue(),
+	}
 }
 
 // startup is called when the app starts. The context is saved
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-}
 
-// Greet returns a greeting for the given name
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
-
-func (a *App) Search() []api.ScoredOffer {
-	logger, _ := zap.NewDevelopment()
-	defer logger.Sync()
-
-	sugar := logger.Sugar()
 	// Load .env file
 	if err := godotenv.Load(); err != nil {
-		sugar.Fatal(err)
+		a.logger.Fatal(err)
 	}
 
 	// Get API key from environment
 	apiKey := os.Getenv("VASTAI_API_KEY")
 	if apiKey == "" {
-		sugar.Fatal("VASTAI_API_KEY not found in environment")
+		a.logger.Fatal("VASTAI_API_KEY not found in environment")
 	}
+	a.client = api.NewClient(apiKey)
 
-	// Create client
-	client := api.NewClient(apiKey)
+	// Start latency queue
+	go a.latency.Start()
+}
+
+func (a *App) beforeClose(ctx context.Context) bool {
+	a.latency.Kill()
+	return false
+}
+
+func (a *App) Search() []api.ScoredOffer {
+	defer a.logger.Sync()
 
 	// Create search
 	search := api.NewSearch()
 	search.AllocatedStorage = 39.94657756485159
 	search.Limit = 1000
-	// search.Rentable = api.Pointer(true)
-	// search.CPUCores = api.Ge(8)
 
 	// Perform search
-	sugar.Infow("Searching", "search", search)
-	resp, err := client.Search(search)
+	a.logger.Infow("Searching", "search", search)
+	resp, err := a.client.Search(search)
 	if err != nil {
-		sugar.Fatal(err)
+		a.logger.Fatal(err)
 	}
 
 	return api.ScoreOffers(resp.Offers)
