@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"xevion.dev/vastly/api"
 )
@@ -21,8 +22,7 @@ type App struct {
 func NewApp() *App {
 	logger, _ := zap.NewDevelopment()
 	return &App{
-		logger:  logger.Sugar(),
-		latency: api.NewLatencyQueue(),
+		logger: logger.Sugar(),
 	}
 }
 
@@ -41,10 +41,21 @@ func (a *App) startup(ctx context.Context) {
 	if apiKey == "" {
 		a.logger.Fatal("VASTAI_API_KEY not found in environment")
 	}
+
+	// Create Vast API client
 	a.client = api.NewClient(apiKey)
 
+	// Connect to Redis
+	redisUrl := os.Getenv("REDIS_URL")
+	redisOptions, err := redis.ParseURL(redisUrl)
+	if err != nil {
+		a.logger.Fatal("Failed to parse Redis URL", err)
+	}
+	redis := redis.NewClient(redisOptions)
+
 	// Start latency queue
-	go a.latency.Start()
+	a.latency = api.NewLatencyQueue(redis)
+	go a.latency.Start(ctx)
 }
 
 func (a *App) beforeClose(ctx context.Context) bool {
@@ -65,6 +76,10 @@ func (a *App) Search() []api.ScoredOffer {
 	resp, err := a.client.Search(search)
 	if err != nil {
 		a.logger.Fatal(err)
+	}
+
+	for _, offer := range resp.Offers {
+		a.latency.QueuePing(offer.PublicIPAddr)
 	}
 
 	return api.ScoreOffers(resp.Offers)
