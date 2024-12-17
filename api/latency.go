@@ -162,9 +162,11 @@ func (l *LatencyQueue) Start(ctx context.Context) {
 
 			// Store the result in Redis
 			value := "timeout"
-			expiration := time.Hour*24 + time.Minute*time.Duration(rand.Intn(60*8))
+			expiration := time.Hour*8 + time.Minute*time.Duration(rand.Intn(60*8))
 			if success {
 				value = results.AvgRtt.String()
+			} else {
+				expiration = time.Hour*4 + time.Minute*time.Duration(rand.Intn(60*4))
 			}
 
 			l.logger.Debugw("Ping Result", "ip", ip, "latency", value)

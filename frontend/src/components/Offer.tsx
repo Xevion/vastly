@@ -30,7 +30,9 @@ export default function Offer({
           <span className="text-sm">{mb_to_gb(offer.gpu_ram)} GB</span>
         </span>
         <span className="relative top-3 text-base">
-          <span>{latency ?? "?"}</span>
+          <span className={latency == -1 ? "text-red-500" : ""}>
+            {latency == -1 ? "??" : latency}
+          </span>
           <span className="text-xs select-none">ms</span>
         </span>
       </div>
