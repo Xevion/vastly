@@ -74,6 +74,10 @@ func (l *LatencyQueue) SetHandler(handler chan<- PingResult) {
 	l.handlerChannel = handler
 }
 
+func (l *LatencyQueue) GetSelfIP() net.IP {
+	return l.ipSelf
+}
+
 func (l *LatencyQueue) RefreshIP() error {
 	resp, err := http.Get("https://api.ipify.org?format=text")
 	if err != nil {
@@ -144,8 +148,6 @@ func (l *LatencyQueue) Start(ctx context.Context) {
 			pinger.Count = 1
 			pinger.Interval = time.Nanosecond
 			pinger.Timeout = time.Millisecond * 500
-
-			l.logger.Debugw("Ping Request", "ip", ip)
 
 			// Process the request
 			err = pinger.Run()

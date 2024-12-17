@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
@@ -16,6 +18,7 @@ type App struct {
 	client  *api.Client
 	logger  *zap.SugaredLogger
 	latency *api.LatencyQueue
+	redis   *redis.Client
 }
 
 // NewApp creates a new App application struct
@@ -51,10 +54,14 @@ func (a *App) startup(ctx context.Context) {
 	if err != nil {
 		a.logger.Fatal("Failed to parse Redis URL", err)
 	}
-	redis := redis.NewClient(redisOptions)
+
+	a.redis = redis.NewClient(redisOptions)
+	if _, err := a.redis.Ping(ctx).Result(); err != nil {
+		a.logger.Fatal("Failed to connect to Redis", err)
+	}
 
 	// Start latency queue
-	a.latency = api.NewLatencyQueue(redis)
+	a.latency = api.NewLatencyQueue(a.redis)
 	go a.latency.Start(ctx)
 }
 
@@ -82,5 +89,36 @@ func (a *App) Search() []api.ScoredOffer {
 		a.latency.QueuePing(offer.PublicIPAddr)
 	}
 
-	return api.ScoreOffers(resp.Offers)
+	scored := api.ScoreOffers(resp.Offers)
+
+	// collect IP latency keys
+	currentIP := a.latency.GetSelfIP()
+	batchCount := min(100, len(scored))
+	latencyKeys := make([]string, batchCount, batchCount)
+	for i := range batchCount {
+		latencyKeys[i] = fmt.Sprintf("latency:%s:%s", currentIP, scored[i].Offer.PublicIPAddr)
+	}
+	latencyValues, err := a.redis.MGet(a.ctx, latencyKeys...).Result()
+	if err != nil {
+		a.logger.Errorw("Failed to get latency values", "error", err)
+	}
+
+	// Assign latency values to scored offers
+	for i, value := range latencyValues {
+		if value != nil {
+			if value.(string) == "timeout" {
+				scored[i].Latency = api.Pointer(int32(-1))
+				continue
+			}
+
+			parsed, err := time.ParseDuration(value.(string))
+			if err != nil {
+				a.logger.Errorw("Failed to parse latency value", "error", err)
+				continue
+			}
+			scored[i].Latency = api.Pointer(int32(parsed.Milliseconds()))
+		}
+	}
+
+	return scored
 }

@@ -8,8 +8,6 @@ function App() {
 
   async function invoke() {
     const offers = await Search();
-    console.log({ offer: offers[0] });
-    offers.sort((a, b) => b.Score - a.Score);
     setState(offers);
   }
 

@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"math"
+	"slices"
 
 	"go.uber.org/zap"
 )
@@ -190,10 +191,21 @@ func ScoreOffers(offers []Offer) []ScoredOffer {
 			}
 		}
 		newScore := score * multiplier
-		// sugar.Infow("Multiplier Applied", "offer", offer.ID, "baseScore", score, "score", newScore, "multiplier", multiplier)
 		score = newScore
 
 		scoredOffers = append(scoredOffers, ScoredOffer{Offer: offer, Score: score, Reasons: reasons})
 	}
+
+	// Sort by score
+	slices.SortStableFunc(scoredOffers, func(a, b ScoredOffer) int {
+		if a.Score < b.Score {
+			return 1
+		} else if a.Score > b.Score {
+			return -1
+		} else {
+			return 0
+		}
+	})
+
 	return scoredOffers
 }
